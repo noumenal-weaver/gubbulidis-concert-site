@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  gubbulidis:
+    image: nginx:alpine
+    container_name: gubbulidis
+    restart: unless-stopped
+    volumes:
+      - /opt/gubbulidis/www:/usr/share/nginx/html:ro
+    networks:
+      - traefik
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.gubbulidis.rule=Host(`maine.lumiflora.dev`)
+      - traefik.http.routers.gubbulidis.entrypoints=websecure
+      - traefik.http.routers.gubbulidis.tls=true
+      - traefik.http.routers.gubbulidis.tls.certresolver=letsencrypt
+      - traefik.http.services.gubbulidis.loadbalancer.server.port=80
+networks:
+  traefik:
+    external: true
